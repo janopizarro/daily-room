@@ -6,7 +6,6 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 import Lottie from "lottie-react";
-import emojiGlassAnimation from "../res/emoji-glass.json";
 import helloAnimation from "../res/hello.json";
 
 export default function HomePage() {
