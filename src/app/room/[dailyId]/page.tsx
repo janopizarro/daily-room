@@ -90,12 +90,12 @@ export default function RoomPage() {
 
   useEffect(() => {
     if (!daily?.timer || isFinishing) return; // 👈 evita actualizar si ya se está finalizando
-  
+
     let interval: NodeJS.Timeout;
-  
+
     const updateTimer = () => {
       const { isRunning, currentTime, lastUpdatedAt } = daily.timer;
-  
+
       if (isRunning && lastUpdatedAt?.seconds) {
         const now = Date.now() / 1000;
         const elapsed = Math.floor(now - lastUpdatedAt.seconds);
@@ -106,13 +106,12 @@ export default function RoomPage() {
         setLocalIsRunning(false);
       }
     };
-  
+
     updateTimer();
     interval = setInterval(updateTimer, 1000);
-  
+
     return () => clearInterval(interval);
   }, [daily?.timer, isFinishing]);
-  
 
   const handlePause = async () => {
     const now = Date.now() / 1000;
@@ -152,11 +151,10 @@ export default function RoomPage() {
         }
       }
     });
-  
+
     return () => unsub();
   }, []);
-  
-  
+
   useEffect(() => {
     if (!dailyId) return;
 
@@ -261,9 +259,15 @@ export default function RoomPage() {
   const isOvertime = currentSpeaker?.isOvertime;
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-6">
-      <h1 className="mb-4 text-2xl font-bold">Sala Activa</h1>
-
+    <main className="min-h-screen bg-[#121212] text-white flex flex-col items-center px-4 py-8">
+    <div className="w-full max-w-md space-y-6">
+  
+      {/* Título */}
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-orange-500">Sala Activa</h1>
+      </div>
+  
+      {/* Overlay finalizando */}
       {isFinishedGlobally && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="flex animate-bounce items-center gap-2 text-2xl font-semibold text-white">
@@ -271,106 +275,114 @@ export default function RoomPage() {
           </div>
         </div>
       )}
-
-      {currentSpeaker ? (
-        currentSpeaker.id === user?.uid ? (
-          <div className="mb-6 flex flex-col items-center">
-            <img
-              src={currentSpeaker.avatar}
-              alt={currentSpeaker.name}
-              className="mb-2 h-16 w-16 rounded-full border"
-            />
-            <p className="text-lg font-semibold text-green-600">🎤 ¡Es tu turno, amiguito!</p>
-          </div>
+  
+      {/* Participante actual */}
+      <div className="p-4 rounded-xl shadow flex flex-col items-center text-center">
+        {currentSpeaker ? (
+          currentSpeaker.id === user?.uid ? (
+            <>
+              <img
+                src={currentSpeaker.avatar}
+                alt={currentSpeaker.name}
+                className="h-10 w-10 rounded-full border-2 border-orange-500 mb-3"
+              />
+              <p className="text-lg font-semibold text-orange-400">
+              ¡Es tu turno!
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-3">
+                <img
+                  src={currentSpeaker.avatar}
+                  alt={currentSpeaker.name}
+                  className="h-10 w-10 rounded-full border"
+                />
+                <p className="text-base font-medium text-white">
+                  <strong>{currentSpeaker.name}</strong> está hablando
+                </p>
+              </div>
+            </>
+          )
         ) : (
-          <div className="mb-6 flex items-center gap-3 rounded bg-white/10 px-4 py-2">
-            <img
-              src={currentSpeaker.avatar}
-              alt={currentSpeaker.name}
-              className="h-10 w-10 rounded-full border"
-            />
-            <p className="text-base font-medium text-white">
-              <strong>{currentSpeaker.name}</strong> está hablando
-            </p>
-          </div>
-        )
-      ) : (
-        <p>Esperando participante...</p>
-      )}
+          <p className="text-white">Esperando participante...</p>
+        )}
+      </div>
+  
+      {/* Timer */}
+      <div
+  className={`text-center text-[6rem] md:text-[6rem] leading-none font-extrabold tracking-wider drop-shadow-2xl transition-colors duration-300 ${
+    isOvertime
+      ? "animate-pulse text-orange-500"
+      : "text-orange-400"
+  } font-nunito`}
+>
+  <strong>{new Date(timer * 1000).toISOString().substr(11, 8)}</strong>
+</div>
 
-  <div
-    className={`text-[3rem] font-extrabold tracking-wider drop-shadow-xl md:text-[5rem] ${
-      isOvertime ? "animate-pulse text-red-500" : "text-white"
-    }`}
-  >
-    {new Date(timer * 1000).toISOString().substr(11, 8)}
-  </div>
-
-
+  
+      {/* Total hablado */}
       {totalSpokenTime !== 0 && (
-        <p className="mt-2 mb-6 text-sm text-gray-400">
-          Tiempo total hablado: <span className="font-mono">{formatTime(totalSpokenTime)}</span>
+        <p className="text-sm text-gray-400 text-center">
+          Tiempo total hablado:{" "}
+          <span className="font-mono">{formatTime(totalSpokenTime)}</span>
         </p>
       )}
-
-      {/* {nextSpeaker && (
-        <div className="mt-2 text-sm text-gray-500">
-          👀 Próximo: <strong>{nextSpeaker.name}</strong>
-        </div>
+  
+      {/* Alertas */}
+      {/* {speakerReallyDisconnected && (
+        <p className="text-sm text-red-400 text-center">
+          ⚠️ {currentSpeaker.name} se desconectó. Puedes pausar el tiempo o pasar al siguiente orador.
+        </p>
       )} */}
-
-      {speakerReallyDisconnected && (
-        <div className="mt-4 max-w-md text-center text-sm text-red-600">
-          ⚠️ {currentSpeaker.name} se desconectó. Puedes pausar el tiempo o continuar con el
-          siguiente orador.
-        </div>
-      )}
-
+  
       {isSpectator && (
-        <div className="mt-4 max-w-md text-center text-sm text-yellow-600">
-          ⚠️ Esta daily ya comenzó. Estás como espectador. No te preocupes, podrás participar en la
-          siguiente.
-        </div>
+        <p className="text-sm text-yellow-400 text-center">
+          ⚠️ Esta daily ya comenzó. Estás como espectador.
+        </p>
       )}
-
+  
       {nextSpeakerUid === user?.uid && (
-        <div className="mt-2 text-sm font-semibold text-green-600">
-          👋 ¡Atento! Tú eres el próximo en hablar.
-        </div>
+        <p className="text-sm font-semibold text-green-400 text-center">
+          👋 ¡Prepárate! Tú eres el siguiente.
+        </p>
       )}
-
-      <div className="mt-4 flex gap-4">
-      <button
-  onClick={localIsRunning ? handlePause : handleContinue}
-  className={`rounded px-4 py-2 text-white transition-all duration-200 ${
-    localIsRunning
-      ? "bg-yellow-500 hover:bg-yellow-600"
-      : "bg-blue-600 hover:bg-blue-700"
-  }`}
->
-  {localIsRunning ? "Pausar" : "Continuar"}
-</button>
-
-{isCurrentUser && !isLastSpeaker && nextSpeaker && (
+  
+      {/* Controles */}
+<div className="flex flex-col items-center gap-4">
   <button
-    onClick={handleNext}
-    className="rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
+    onClick={localIsRunning ? handlePause : handleContinue}
+    className={`py-3 px-6 text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg ${
+      localIsRunning
+        ? "bg-yellow-500 hover:bg-yellow-600"
+        : "bg-blue-600 hover:bg-blue-700"
+    }`}
   >
-    Le paso la ⚽ a {nextSpeaker.name}
+    {localIsRunning ? "⏸️ Pausar" : "▶️ Continuar"}
   </button>
-)}
+
+  {isCurrentUser && !isLastSpeaker && nextSpeaker && (
+    <button
+      onClick={handleNext}
+      className="py-3 px-6 bg-[#FF8A00] hover:bg-[#FF9D33] text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+    >
+      ⚽ Le paso la pelota a {nextSpeaker.name}
+    </button>
+  )}
+
+  {isFinalUser && (
+    <button
+      onClick={handleNext}
+      className="py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+    >
+      🎉 ¡Eres el último! Finalizar Daily
+    </button>
+  )}
+</div>
 
 
-        {isFinalUser && (
-          <button
-            onClick={handleNext}
-            className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-          >
-            ¡Eres el último! Finalizar Daily
-          </button>
-        )}
-
-      </div>
-    </main>
+    </div>
+  </main>
+  
   );
 }

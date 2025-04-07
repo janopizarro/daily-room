@@ -20,6 +20,11 @@
 }
 
 p,
+strong,
+label,
+input,
+button,
+span,
 h1,
 h2,
 h3,
@@ -28,6 +33,10 @@ h5,
 h6 {
   font-family: "Nunito";
   font-weight: 700;
+}
+
+strong{
+  font-weight: bold;
 }
 
 body {
