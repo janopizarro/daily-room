@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import helloAnimation from "../res/hello.json";
 
 export default function HomePage() {
