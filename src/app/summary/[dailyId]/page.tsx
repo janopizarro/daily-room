@@ -116,51 +116,47 @@ export default function SummaryPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#121212] text-white px-4 py-8">
-  {/* Tarjeta de resumen */}
-  <div
-    ref={resumenRef}
-    className="w-full max-w-md bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl shadow-lg p-6 text-white font-nunito mb-8"
-  >
-    <h2 className="text-3xl font-bold text-center text-orange-500 mb-2">
-      Resumen de la Daily
-    </h2>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#121212] px-4 py-8 text-white">
+      {/* Tarjeta de resumen */}
+      <div
+        ref={resumenRef}
+        className="font-nunito mb-8 w-full max-w-md rounded-xl border border-[#2A2A2A] bg-[#1E1E1E] p-6 text-white shadow-lg"
+      >
+        <h2 className="mb-2 text-center text-3xl font-bold text-orange-500">Resumen de la Daily</h2>
 
-    <p className="text-sm text-center text-gray-400 mb-8">{now}</p>
+        <p className="mb-8 text-center text-sm text-gray-400">{now}</p>
 
-    <ul className="space-y-3 text-center">
-      {participants.map((p) => (
-        <li key={p.id} className="text-l">
-          <strong className="text-orange-400">{p.name}</strong> – {formatTime(p.timeSpoken)}{" "}
-          {p.isOvertime && <span className="text-red-500 font-semibold">🔥</span>}
-        </li>
-      ))}
-    </ul>
+        <ul className="space-y-3 text-center">
+          {participants.map((p) => (
+            <li key={p.id} className="text-l">
+              <strong className="text-orange-400">{p.name}</strong> – {formatTime(p.timeSpoken)}{" "}
+              {p.isOvertime && <span className="font-semibold text-red-500">🔥</span>}
+            </li>
+          ))}
+        </ul>
 
-    <hr className="my-4 border-gray-700" />
+        <hr className="my-4 border-gray-700" />
 
-    <p className="text-center text-base font-bold text-white">
-      Tiempo total:{" "}
-      {formatTime(participants.reduce((sum, p) => sum + p.timeSpoken, 0))}
-    </p>
-  </div>
+        <p className="text-center text-base font-bold text-white">
+          Tiempo total: {formatTime(participants.reduce((sum, p) => sum + p.timeSpoken, 0))}
+        </p>
+      </div>
 
-  {/* Botones */}
-  <div className="flex flex-col gap-4 items-center">
-    <button
-      onClick={handleDownload}
-      className="px-6 py-3 bg-[#FF8A00] hover:bg-[#FF9D33] text-black font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-    >
-      Descargar Resumen
-    </button>
-    <button
-      onClick={handleResetDaily}
-      className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-    >
-      Reiniciar
-    </button>
-  </div>
-</main>
-
+      {/* Botones */}
+      <div className="flex flex-col items-center gap-4">
+        <button
+          onClick={handleDownload}
+          className="transform rounded-lg bg-[#FF8A00] px-6 py-3 font-medium text-black shadow-lg transition-all hover:scale-[1.02] hover:bg-[#FF9D33] active:scale-[0.98]"
+        >
+          Descargar Resumen
+        </button>
+        <button
+          onClick={handleResetDaily}
+          className="transform rounded-lg bg-green-600 px-6 py-3 font-medium text-white shadow-lg transition-all hover:scale-[1.02] hover:bg-green-700 active:scale-[0.98]"
+        >
+          Reiniciar
+        </button>
+      </div>
+    </main>
   );
 }

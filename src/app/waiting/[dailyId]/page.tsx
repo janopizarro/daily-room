@@ -138,102 +138,98 @@ export default function WaitingRoomPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8 bg-[#121212]">
-  <div className="w-full max-w-md bg-[#1E1E1E] rounded-xl overflow-hidden border border-[#2A2A2A]">
-    <div className="p-6 border-b border-[#2A2A2A]">
-      <h1 className="text-2xl font-bold text-center text-white">Sala de Espera</h1>
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#121212] p-4 md:p-8">
+      <div className="w-full max-w-md overflow-hidden rounded-xl border border-[#2A2A2A] bg-[#1E1E1E]">
+        <div className="border-b border-[#2A2A2A] p-6">
+          <h1 className="text-center text-2xl font-bold text-white">Sala de Espera</h1>
+        </div>
 
-    <div className="px-6 pb-6 space-y-6 pt-6">
-      {!user ? (
-        <button
-          onClick={handleLogin}
-          className="w-full py-3 px-4 bg-[#FF8A00] hover:bg-[#FF9D33] text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-        >
-          Iniciar sesión con Google
-        </button>
-      ) : (
-        <>
-          <div className="flex items-center justify-between bg-[#2A2A2A] p-4 rounded-lg">
-            <div className="flex items-center gap-3">
-              <img
-                src={user?.photoURL}
-                alt={user?.displayName}
-                className="h-10 w-10 rounded-full border-2 border-[#FF8A00]"
-              />
-              <p className="text-white font-medium text-base">
-                ¡Hola, {user?.displayName}!
-              </p>
-            </div>
+        <div className="space-y-6 px-6 pt-6 pb-6">
+          {!user ? (
             <button
-              onClick={handleLogout}
-              className="px-3 py-1.5 bg-transparent hover:bg-[#3A3A3A] text-[#FF8A00] border border-[#FF8A00] rounded-md text-sm font-medium transition-colors"
+              onClick={handleLogin}
+              className="w-full transform rounded-lg bg-[#FF8A00] px-4 py-3 font-medium text-white shadow-lg transition-all hover:scale-[1.02] hover:bg-[#FF9D33] active:scale-[0.98]"
             >
-              Cerrar sesión
+              Iniciar sesión con Google
             </button>
-          </div>
-
-          <div className="bg-[#2A2A2A] rounded-lg p-5 shadow-xl">
-            <h2 className="text-lg font-semibold mb-4 text-white border-b border-[#3A3A3A] pb-2">
-              Participantes conectados
-            </h2>
-            <ul className="space-y-4">
-              {participants.map((p) => (
-                <li
-                  key={p.id}
-                  className="flex items-center gap-3 p-2 hover:bg-[#3A3A3A] rounded-lg transition-colors"
+          ) : (
+            <>
+              <div className="flex items-center justify-between rounded-lg bg-[#2A2A2A] p-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={user?.photoURL}
+                    alt={user?.displayName}
+                    className="h-10 w-10 rounded-full border-2 border-[#FF8A00]"
+                  />
+                  <p className="text-base font-medium text-white">¡Hola, {user?.displayName}!</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-md border border-[#FF8A00] bg-transparent px-3 py-1.5 text-sm font-medium text-[#FF8A00] transition-colors hover:bg-[#3A3A3A]"
                 >
-                  <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#FF8A00]">
-                    <img
-                      src={p.avatar || "/placeholder.svg"}
-                      alt={p.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-gray-300 font-medium">{p.name}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+                  Cerrar sesión
+                </button>
+              </div>
 
-          <div>
-            <label className="text-sm text-gray-400">Comparte este enlace:</label>
-            <div className="flex gap-2 mt-2">
-              <input
-                readOnly
-                value={typeof window !== "undefined" ? window.location.href : ""}
-                className="flex-1 px-4 py-3 bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8A00] text-white placeholder-gray-500"
-                onClick={(e) => (e.target as HTMLInputElement).select()}
-              />
-              <button
-                onClick={() => navigator.clipboard.writeText(window.location.href)}
-                className="p-3 bg-[#2A2A2A] hover:bg-[#3A3A3A] text-[#FF8A00] rounded-lg border border-[#3A3A3A] transition-colors"
-              >
-                📋
-              </button>
-            </div>
-          </div>
+              <div className="rounded-lg bg-[#2A2A2A] p-5 shadow-xl">
+                <h2 className="mb-4 border-b border-[#3A3A3A] pb-2 text-lg font-semibold text-white">
+                  Participantes conectados
+                </h2>
+                <ul className="space-y-4">
+                  {participants.map((p) => (
+                    <li
+                      key={p.id}
+                      className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-[#3A3A3A]"
+                    >
+                      <div className="h-9 w-9 overflow-hidden rounded-full border-2 border-[#FF8A00]">
+                        <img
+                          src={p.avatar || "/placeholder.svg"}
+                          alt={p.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <span className="font-medium text-gray-300">{p.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          {user && !daily?.started && participants.length < MINIMUM_PARTICIPANTS && (
-            <p className="mt-2 text-sm text-yellow-400 text-center">
-              ⚠️ Se requieren al menos {MINIMUM_PARTICIPANTS} participantes conectados.
-            </p>
+              <div>
+                <label className="text-sm text-gray-400">Comparte este enlace:</label>
+                <div className="mt-2 flex gap-2">
+                  <input
+                    readOnly
+                    value={typeof window !== "undefined" ? window.location.href : ""}
+                    className="flex-1 rounded-lg border border-[#3A3A3A] bg-[#2A2A2A] px-4 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-[#FF8A00] focus:outline-none"
+                    onClick={(e) => (e.target as HTMLInputElement).select()}
+                  />
+                  <button
+                    onClick={() => navigator.clipboard.writeText(window.location.href)}
+                    className="rounded-lg border border-[#3A3A3A] bg-[#2A2A2A] p-3 text-[#FF8A00] transition-colors hover:bg-[#3A3A3A]"
+                  >
+                    📋
+                  </button>
+                </div>
+              </div>
+
+              {user && !daily?.started && participants.length < MINIMUM_PARTICIPANTS && (
+                <p className="mt-2 text-center text-sm text-yellow-400">
+                  ⚠️ Se requieren al menos {MINIMUM_PARTICIPANTS} participantes conectados.
+                </p>
+              )}
+
+              {user && participants.length >= MINIMUM_PARTICIPANTS && !daily?.started && (
+                <button
+                  onClick={handleStartDaily}
+                  className="w-full transform rounded-lg bg-[#FF8A00] px-4 py-3 font-medium text-white shadow-lg transition-all hover:scale-[1.02] hover:bg-[#FF9D33] active:scale-[0.98]"
+                >
+                  Randomizar e Iniciar Daily
+                </button>
+              )}
+            </>
           )}
-
-          {user && participants.length >= MINIMUM_PARTICIPANTS && !daily?.started && (
-            <button
-              onClick={handleStartDaily}
-              className="w-full py-3 px-4 bg-[#FF8A00] hover:bg-[#FF9D33] text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-            >
-              Randomizar e Iniciar Daily
-            </button>
-          )}
-        </>
-      )}
-    </div>
-  </div>
-</main>
-
-
+        </div>
+      </div>
+    </main>
   );
 }
