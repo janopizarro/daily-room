@@ -2,7 +2,9 @@
 import Holidays from "date-holidays";
 import moment from "moment";
 
-export const getNextWorkday = (locale: string): { isHoliday: boolean; nextWorkday: Date; formattedDay: string } => {
+export const getNextWorkday = (
+  locale: string
+): { isHoliday: boolean; nextWorkday: Date; formattedDay: string } => {
   const countryCode = locale.split("-")[1];
   const hd = new Holidays(countryCode);
   const today = new Date();

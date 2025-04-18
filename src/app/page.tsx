@@ -14,43 +14,49 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Holiday } from "@/components/Holiday";
 import { CreateDailyForm } from "@/components/CreateDaily";
+import { getRandomDailyMessage } from "@/utils";
 
 export default function HomePage() {
   const [isTyping, setIsTyping] = useState(false);
 
-  const randomImage = useMemo(() => {
-    const images = ["/images/hi.png", "/images/hi-2.png", "/images/hi-3.png", "/images/hi-4.png"];
-    return images[Math.floor(Math.random() * images.length)];
-  }, []);
-
   const locale = navigator.language;
-  const { isHoliday, formattedDay } = getNextWorkday(locale);
+  const {
+    isHoliday,
+    formattedDay,
+  } = getNextWorkday(locale);
   const nombreDia = moment().format("dddd");
 
+  // only debug
+  // const isHoliday = true;
+
+  const [dailyMessage] = useState(() => getRandomDailyMessage(nombreDia));
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#121212] p-8 text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#121212] bg-[linear-gradient(90deg,_rgba(255,255,255,0.02)_1px,_transparent_1px),linear-gradient(180deg,_rgba(255,255,255,0.02)_1px,_transparent_1px)] bg-[size:20px_20px] p-0 text-white">
       {isHoliday ? (
         <Holiday nextWorkdayLabel={formattedDay} />
       ) : (
         <>
           <motion.div
-            animate={
-              isTyping ? { rotate: [0, -10, 10, -15, 15, -10, 10, -5, 5, -5] } : { rotate: 0 }
-            }
+            animate={isTyping ? { scale: [1, 1.2, 0.95, 1.15, 1] } : { scale: 1 }}
             transition={{ duration: 1, ease: "easeInOut" }}
           >
             <Image
-              src={randomImage}
+              src="/images/logoDailyRoom.png"
               alt="Logo"
               width={200}
-              height={200}
-              style={{ marginBottom: 30 }}
+              height={20}
+              style={{ marginBottom: 45 }}
             />
           </motion.div>
 
-          <p className="text-md mb-6">Ya es {nombreDia}, crea tu sala para la daily de hoy</p>
-          <CreateDailyForm isTyping={isTyping} setIsTyping={setIsTyping} />
+          <h1 className="text-md mb-2">{dailyMessage}</h1>
 
+          <div className="mt-10 flex w-full justify-center bg-neutral-800/60 p-7 pb-10">
+            <CreateDailyForm isTyping={isTyping} setIsTyping={setIsTyping} />
+          </div>
+
+          <small style={{ marginTop: 40 }}>Diseñado con GPT y debuggeado con cafeína ☕</small>
         </>
       )}
     </main>

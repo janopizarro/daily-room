@@ -25,14 +25,14 @@ export const CreateDailyForm = ({ isTyping, setIsTyping }: Props) => {
       }}
       className="flex w-full max-w-md flex-col gap-6"
     >
-      <input
+      {/* <input
         type="text"
         placeholder="Nombre de la Daily"
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="mb-2 rounded-md border border-orange-500 bg-[#1e1e1e] p-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:outline-none"
         required
-      />
+      /> */}
 
       <DurationInput
         duration={duration}
@@ -44,10 +44,11 @@ export const CreateDailyForm = ({ isTyping, setIsTyping }: Props) => {
 
       <button
         type="submit"
-        className="self-center rounded bg-orange-500 px-6 py-2 text-lg font-medium text-black hover:bg-orange-400 disabled:opacity-50"
+        style={{ backgroundColor: "#fa7f1d" }}
+        className="self-center rounded px-6 py-2 text-lg font-medium text-black hover:bg-orange-400 disabled:opacity-50"
         disabled={loading}
       >
-        {loading ? "Creando..." : "Crear Sala"}
+        <strong style={{ fontSize: 22 }}>{loading ? "Creando..." : "Crear Sala"}</strong>
       </button>
     </form>
   );
